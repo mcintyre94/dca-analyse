@@ -18,7 +18,7 @@ async function* makeCsvData(
   yield [
     `${inSym} out`,
     `${outSym} in`,
-    `rate (${outSym} per ${inSym})`,
+    `Rate (${outSym} per ${inSym})`,
     "DateTime",
     "Transaction",
   ];
