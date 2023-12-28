@@ -1,6 +1,6 @@
 {
     "tasks": {
-        "run": "deno run --allow-read --allow-env --allow-sys=uid --allow-ffi --allow-net --allow-write dca-analyse.ts",
-        "compile": "deno compile --allow-read --allow-env --allow-sys=uid --allow-ffi --allow-net --allow-write --output ./bin/dca-analyse dca-analyse.ts"
+        "run": "deno run --allow-read --allow-env --allow-sys=uid --allow-ffi --allow-net --allow-write ./src/dca-analyse.ts",
+        "compile": "deno compile --allow-read --allow-env --allow-sys=uid --allow-ffi --allow-net --allow-write --output ./bin/dca-analyse ./src/dca-analyse.ts"
     }
 }
