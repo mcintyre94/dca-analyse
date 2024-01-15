@@ -5,6 +5,8 @@ import { getAddress, getRpcUrl } from "./inputs.ts";
 import { DCAMapItem, makeDcaClient, makeDcaMap } from "./dca-fetch.ts";
 import { getDCAListOptions } from "./dca-list.ts";
 import { makeCsv } from "./csv.ts";
+import { findDcasWithMissingSignatures } from "./missing-signatures.ts";
+import { ExitCodes } from "./exit-codes.ts";
 
 async function main() {
   const rpcUrl = await getRpcUrl();
@@ -16,7 +18,7 @@ async function main() {
   // Exit if no DCAs for user
   if (dcaMap.size === 0) {
     console.log(`No DCAs found for address ${address.toBase58()}`);
-    Deno.exit(0);
+    Deno.exit(ExitCodes.Success);
   }
 
   const options = getDCAListOptions(dcaMap);
@@ -32,6 +34,11 @@ async function main() {
   const selectedDcaItems: DCAMapItem[] = selectedDcaAddresses
     .map((address) => dcaMap.get(address))
     .filter((value) => value !== undefined) as unknown as DCAMapItem[];
+
+  // Handle missing signatures
+  const dcaItemsWithMissingSignatures = await findDcasWithMissingSignatures(selectedDcaItems);
+
+
 
   // Group by input + output token
   const groupByTokens = Object.groupBy(

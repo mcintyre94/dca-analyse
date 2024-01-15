@@ -3,6 +3,7 @@ import { DCA, FillHistory } from "npm:@jup-ag/dca-sdk@2.3.8";
 import { BN } from "npm:@coral-xyz/anchor@0.28.0";
 import { BigFloat } from "https://deno.land/x/bigfloat@v3.0.2/mod.ts";
 import { format as dateFormat } from "https://deno.land/std@0.210.0/datetime/format.ts";
+import { ExitCodes } from "./exit-codes.ts";
 
 type TokenInfo = {
   symbol: string;
@@ -39,16 +40,16 @@ async function getTokenInfo(mintPublicKey: PublicKey): Promise<TokenInfo> {
     `https://token-list-api.solana.cloud/v1/search?query=${mintString}&chainId=101&start=0&limit=1`,
   );
   if (res.status !== 200) {
-    console.error(`Couldn't fetch token info for ${mintString}`);
+    console.error(`Couldn't fetch token info for ${mintString} (status ${res.status})`);
     // TODO: might want better error handling here
-    Deno.exit(3);
+    Deno.exit(ExitCodes.FailedToFetchTokenInfo);
   }
   const { content }: { content: TokenInfo[] } = await res.json();
 
   if (content.length === 0) {
-    console.error(`Couldn't fetch token info for ${mintString}`);
+    console.error(`Couldn't fetch token info for ${mintString} (no content)`);
     // TODO: might want better error handling here
-    Deno.exit(4);
+    Deno.exit(ExitCodes.FailedToFetchTokenInfo);
   }
 
   return {
